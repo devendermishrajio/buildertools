@@ -1,0 +1,11 @@
+---
+- hosts: cp*
+  sudo: yes
+  tasks:
+    - name: Copy userdata file
+      copy: src=files/userdata.txt dest=/tmp/userdata.sh mode=755
+    - name: Run shell on background
+      shell: bash /tmp/userdata.sh
+      async: 4
+      poll: 0
+

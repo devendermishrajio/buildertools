@@ -1,0 +1,13 @@
+---
+- hosts: cp*
+  sudo: yes
+  tasks:
+    - shell: nslookup vpc.staging.jio.com
+      register: nslookup
+    - debug: msg="nslookup output = {{ nslookup.stdout }}"
+    - shell: grep xampp /var/log/vrouter/vrouter.log
+      register: xampp
+    - debug: msg="xampp output = {{ xampp.stdout }}"
+    - shell: ifquery vhost0
+      register: vhost0
+    - debug: msg="vhost0 out = {{ vhost0.
