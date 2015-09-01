@@ -30,6 +30,11 @@ def run_ansible(inventory, playbook, username="", limit="", extra_vars=""):
 
   call(call_list)
 
+def run_python(pythonfile, args):
+  call_list = ["python", pythonfile]
+  call_list.extend(args)
+  call(call_list)
+
 if __name__ == "__main__":
   if len(sys.argv) < 3:
     sys.stderr.write("Insufficient argument")
@@ -57,17 +62,32 @@ if __name__ == "__main__":
   run_ansible(inventory,"add_line_in_file.yml", extra_vars="file=/etc/hosts line=%s"%(selected_node["host"]+" "+selected_node["name"]))
   #run_ansible(inventory,"add_line_in_file.yml", extra_vars="file=/etc/hosts line=%s"%(selected_node["host"]+" "+selected_node["name"]), username=user_name)
 
+#  run_python("apply_changes.py", ["ntp-infile", compute_inventory, "compute_team", cp_node])
+  run_python("apply_changes.py", ["ntp-infile", compute_inventory, "vagrant", cp_node])
+
   run_ansible(compute_inventory,"install_certs.yml")
   #run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node)
 
-  run_ansible(compute_inventory,"install_certs.yml", extra_vars="apache2_server_name=sbs.staging.jiocloudservices.com jiocloud_cert=certs/sbs.staging.jiocloudservices.com.crt")
+  run_ansible(compute_inventory,"install_certs.yml", extra_vars="apache2_server_name=sbs.ind-west-1.staging.jiocloudservices.com jiocloud_cert=certs/sbs.ind-west-1.staging.jiocloudservices.com.crt")
   #run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node, extra_vars="apache2_server_name=sbs.ind-west-1.staging.jiocloudservices.com jiocloud_cert=certs/sbs.ind-west-1.staging.jiocloudservices.com.crt")
 
-  run_ansible(compute_inventory,"install_certs.yml", extra_vars="apache2_server_name=vpc.staging.jiocloudservices.com jiocloud_cert=certs/vpc.staging.jiocloudservices.com.crt")
-  #run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node, extra_vars="apache2_server_name=vpc.staging.jiocloudservices.com jiocloud_cert=certs/vpc.staging.jiocloudservices.com.crt")
+  run_ansible(compute_inventory,"install_certs.yml", extra_vars="apache2_server_name=vpc.ind-west-1.staging.jiocloudservices.com jiocloud_cert=certs/vpc.ind-west-1.staging.jiocloudservices.com.crt")
+  #run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node, extra_vars="apache2_server_name=vpc.ind-west-1.staging.jiocloudservices.com jiocloud_cert=certs/vpc.ind-west-1.staging.jiocloudservices.com.crt")
   
+  run_ansible(compute_inventory,"install_certs.yml", extra_vars="apache2_server_name=iam.ind-west-1.staging.jiocloudservices.com jiocloud_cert=certs/iam.ind-west-1.staging.jiocloudservices.com.crt")
+  #run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node, extra_vars="apache2_server_name=iam.ind-west-1.staging.jiocloudservices.com jiocloud_cert=certs/iam.ind-west-1.staging.jiocloudservices.com.crt")
+
+  run_ansible(compute_inventory,"cp.yml")
+  #run_ansible(inventory,"cp.yml", username=user_name, limit=cp_node)
+
   run_ansible(compute_inventory,"sbs.yml")
   #run_ansible(inventory,"sbs.yml", username=user_name, limit=cp_node)
+
+  run_python("apply_changes.py", ["zmq-infile", compute_inventory, "compute_team"]) 
+  #run_python("apply_changes.py", ["zmq-infile", compute_inventory, "vagrant"]) 
+
+  run_python("apply_changes.py", ["computeinfile", compute_inventory, "compute_team"]) 
+  #run_python("apply_changes.py", ["computeinfile", compute_inventory, "vagrant"]) 
 
   run_ansible(compute_inventory,"run_userdata.yml")
   #run_ansible(inventory,"run_userdata.yml", username=user_name, limit=cp_node)
