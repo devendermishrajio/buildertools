@@ -71,8 +71,8 @@ if __name__ == "__main__":
   run_ansible(compute_inventory,"install_certs.yml", extra_vars="apache2_server_name=sbs.ind-west-1.staging.jiocloudservices.com jiocloud_cert=certs/sbs.ind-west-1.staging.jiocloudservices.com.crt")
   #run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node, extra_vars="apache2_server_name=sbs.ind-west-1.staging.jiocloudservices.com jiocloud_cert=certs/sbs.ind-west-1.staging.jiocloudservices.com.crt")
 
-  run_ansible(compute_inventory,"install_certs.yml", extra_vars="apache2_server_name=vpc.ind-west-1.staging.jiocloudservices.com jiocloud_cert=certs/vpc.ind-west-1.staging.jiocloudservices.com.crt")
-  #run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node, extra_vars="apache2_server_name=vpc.ind-west-1.staging.jiocloudservices.com jiocloud_cert=certs/vpc.ind-west-1.staging.jiocloudservices.com.crt")
+  run_ansible(compute_inventory,"install_certs.yml", extra_vars="apache2_server_name=vpc.staging.jiocloudservices.com jiocloud_cert=certs/vpc.staging.jiocloudservices.com.crt")
+  #run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node, extra_vars="apache2_server_name=vpc.staging.jiocloudservices.com jiocloud_cert=certs/vpc.staging.jiocloudservices.com.crt")
   
   run_ansible(compute_inventory,"install_certs.yml", extra_vars="apache2_server_name=iam.ind-west-1.staging.jiocloudservices.com jiocloud_cert=certs/iam.ind-west-1.staging.jiocloudservices.com.crt")
   #run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node, extra_vars="apache2_server_name=iam.ind-west-1.staging.jiocloudservices.com jiocloud_cert=certs/iam.ind-west-1.staging.jiocloudservices.com.crt")
