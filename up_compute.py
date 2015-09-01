@@ -62,8 +62,8 @@ if __name__ == "__main__":
   run_ansible(inventory,"add_line_in_file.yml", extra_vars="file=/etc/hosts line=%s"%(selected_node["host"]+" "+selected_node["name"]))
   #run_ansible(inventory,"add_line_in_file.yml", extra_vars="file=/etc/hosts line=%s"%(selected_node["host"]+" "+selected_node["name"]), username=user_name)
 
-#  run_python("apply_changes.py", ["ntp-infile", compute_inventory, "compute_team", cp_node])
-  run_python("apply_changes.py", ["ntp-infile", compute_inventory, "vagrant", cp_node])
+  run_python("apply_changes.py", ["ntp-infile", compute_inventory, "compute_team", cp_node])
+  #run_python("apply_changes.py", ["ntp-infile", compute_inventory, "vagrant", cp_node])
 
   run_ansible(compute_inventory,"install_certs.yml")
   #run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node)
