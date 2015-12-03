@@ -1,5 +1,6 @@
 ---
 - hosts: all
+  sudo: yes
   vars:
     old_snapshot: 17
     new_snapshot: 16
