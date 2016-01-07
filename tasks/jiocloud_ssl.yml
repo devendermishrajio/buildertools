@@ -2,7 +2,7 @@
     copy: src="{{ jiocloud_cert }}" dest="{{ apache2_cert_file }}" mode=0644
 
   - name: Copy certificate chain file
-    copy: src="{{ apache2_chain_file }}" dest="/etc/ssl/certs/chain-{{ apache2_server_name }}.key"
+    copy: src="{{ apache2_chain_file }}" dest="/etc/ssl/certs/chain-{{ cert_name }}.key"
     when: apache2_chain_file is defined
 
   - name: Add crt to usr
