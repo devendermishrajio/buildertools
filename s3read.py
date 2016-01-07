@@ -12,4 +12,5 @@ do
      python /home/compute_team/deployment-code/AWSS3ConfigManager/configManager/apply_changes.py /home/compute_team/deployment-code/AWSS3ConfigManager/config-manager-config.conf ansible-vars/$next
      ln -s /etc/conf/ansible-vars/$next $next
 done
+chmod 600 compute_team
 exit 0
