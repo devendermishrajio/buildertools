@@ -73,6 +73,7 @@ if __name__ == "__main__":
   certs=[
           "vpc.ind-west-1.staging.jiocloudservices.com",
           "iam.ind-west-1.staging.jiocloudservices.com",
+          "iam.ind-west-1.staging.deprecated.jiocloudservices.com",
           "sbs.ind-west-1.staging.jiocloudservices.com"
         ]
 
