@@ -39,59 +39,62 @@ if __name__ == "__main__":
   if len(sys.argv) < 3:
     sys.stderr.write("Insufficient argument")
     sys.exit(-1)
-  
+
   cp_yaml = sys.argv[1]
   cp_node = sys.argv[2]
-  
+
   inventory = "inventory"
   if len(sys.argv) >= 4:
     inventory = sys.argv[3]
-  
+
   user_name = ""
   if len(sys.argv) >= 5:
     user_name = sys.argv[4]
-  
+
   compute_inventory = "compute.inventory"
 
   selected_node = get_selected_node(cp_yaml)
   generate_compute_inventory(compute_inventory, selected_node)
 
   run_ansible(compute_inventory,"bootstrap.yml")
-  #run_ansible(inventory,"bootstrap.yml", username=user_name, limit=cp_node)
- 
-  run_ansible(inventory,"add_line_in_file.yml", extra_vars="file=/etc/hosts line=%s"%(selected_node["host"]+" "+selected_node["name"]))
-  #run_ansible(inventory,"add_line_in_file.yml", extra_vars="file=/etc/hosts line=%s"%(selected_node["host"]+" "+selected_node["name"]), username=user_name)
+  ##run_ansible(inventory,"bootstrap.yml", username=user_name, limit=cp_node)
+
+  #print "Test %s"%(selected_node["host"]+" "+selected_node["name"])
+
+  run_ansible(inventory,"add_line_in_file.yml", extra_vars="file=/etc/hosts line=\"%s\""%(selected_node["host"]+" "+selected_node["name"]))
+  ##run_ansible(inventory,"add_line_in_file.yml", extra_vars="\"file=/etc/hosts line=%s\""%(selected_node["host"]+" "+selected_node["name"]), username=user_name)
 
   run_python("apply_changes.py", ["ntp-infile", compute_inventory, "compute_team", cp_node])
-  #run_python("apply_changes.py", ["ntp-infile", compute_inventory, "vagrant", cp_node])
+  ##run_python("apply_changes.py", ["ntp-infile", compute_inventory, "vagrant", cp_node])
 
   run_ansible(compute_inventory,"install_certs.yml")
-  #run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node)
+  ##run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node)
 
-  run_ansible(compute_inventory,"install_certs.yml", extra_vars="apache2_server_name=sbs.ind-west-1.staging.jiocloudservices.com jiocloud_cert=certs/sbs.ind-west-1.staging.jiocloudservices.com.crt")
-  #run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node, extra_vars="apache2_server_name=sbs.ind-west-1.staging.jiocloudservices.com jiocloud_cert=certs/sbs.ind-west-1.staging.jiocloudservices.com.crt")
+  certs=[
+          "vpc.ind-west-1.staging.jiocloudservices.com",
+          "iam.ind-west-1.staging.jiocloudservices.com",
+          "sbs.ind-west-1.staging.jiocloudservices.com"
+        ]
 
-  run_ansible(compute_inventory,"install_certs.yml", extra_vars="apache2_server_name=vpc.staging.jiocloudservices.com jiocloud_cert=certs/vpc.staging.jiocloudservices.com.crt")
-  #run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node, extra_vars="apache2_server_name=vpc.staging.jiocloudservices.com jiocloud_cert=certs/vpc.staging.jiocloudservices.com.crt")
-  
-  run_ansible(compute_inventory,"install_certs.yml", extra_vars="apache2_server_name=iam.ind-west-1.staging.jiocloudservices.com jiocloud_cert=certs/iam.ind-west-1.staging.jiocloudservices.com.crt")
-  #run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node, extra_vars="apache2_server_name=iam.ind-west-1.staging.jiocloudservices.com jiocloud_cert=certs/iam.ind-west-1.staging.jiocloudservices.com.crt")
+  for cert in certs:
+    run_ansible(compute_inventory, "install_certs.yml", extra_vars="cert_name=%s jiocloud_cert=certs/%s.crt"%(cert, cert))
 
   run_ansible(compute_inventory,"cp.yml")
-  #run_ansible(inventory,"cp.yml", username=user_name, limit=cp_node)
-
-  run_ansible(compute_inventory,"sbs.yml")
-  #run_ansible(inventory,"sbs.yml", username=user_name, limit=cp_node)
-
-  run_python("apply_changes.py", ["zmq-infile", compute_inventory, "compute_team"]) 
-  #run_python("apply_changes.py", ["zmq-infile", compute_inventory, "vagrant"]) 
-
-  run_python("apply_changes.py", ["computeinfile", compute_inventory, "compute_team"]) 
-  #run_python("apply_changes.py", ["computeinfile", compute_inventory, "vagrant"]) 
+  ##run_ansible(inventory,"cp.yml", username=user_name, limit=cp_node)
 
   run_ansible(compute_inventory,"run_userdata.yml")
-  #run_ansible(inventory,"run_userdata.yml", username=user_name, limit=cp_node)
-  
+  ##run_ansible(inventory,"run_userdata.yml", username=user_name, limit=cp_node)
+
   run_ansible(compute_inventory,"check_compute.yml")
-  #run_ansible(inventory,"check_compute.yml", username=user_name, limit=cp_node)
+  ##run_ansible(inventory,"check_compute.yml", username=user_name, limit=cp_node)
+
+  run_ansible(compute_inventory,"sbs.yml")
+  ##run_ansible(inventory,"sbs.yml", username=user_name, limit=cp_node)
+
+  run_python("apply_changes.py", ["zmq-infile", compute_inventory, "compute_team"])
+  ##run_python("apply_changes.py", ["zmq-infile", compute_inventory, "vagrant"])
+
+  run_python("apply_changes.py", ["computeinfile", compute_inventory, "compute_team"])
+  ##run_python("apply_changes.py", ["computeinfile", compute_inventory, "vagrant"])
+
 
