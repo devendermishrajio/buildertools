@@ -28,12 +28,16 @@ def run_ansible(inventory, playbook, username="", limit="", extra_vars=""):
   if extra_vars != "":
     call_list.extend(["--extra-vars", extra_vars])
 
-  call(call_list)
+  ret = call(call_list)
+  if ret != 0:
+    raise Exception('no-zero-code', 'ansible-failed')
 
 def run_python(pythonfile, args):
   call_list = ["python", pythonfile]
   call_list.extend(args)
-  call(call_list)
+  ret = call(call_list)
+  if ret != 0:
+    raise Exception('no-zero-code', 'python-failed')
 
 if __name__ == "__main__":
   if len(sys.argv) < 3:
@@ -57,18 +61,10 @@ if __name__ == "__main__":
   generate_compute_inventory(compute_inventory, selected_node)
 
   run_ansible(compute_inventory,"bootstrap.yml")
-  ##run_ansible(inventory,"bootstrap.yml", username=user_name, limit=cp_node)
-
   #print "Test %s"%(selected_node["host"]+" "+selected_node["name"])
-
   run_ansible(inventory,"add_line_in_file.yml", extra_vars="file=/etc/hosts line=\"%s\""%(selected_node["host"]+" "+selected_node["name"]))
-  ##run_ansible(inventory,"add_line_in_file.yml", extra_vars="\"file=/etc/hosts line=%s\""%(selected_node["host"]+" "+selected_node["name"]), username=user_name)
-
   run_python("apply_changes.py", ["ntp-infile", compute_inventory, "compute_team", cp_node])
-  ##run_python("apply_changes.py", ["ntp-infile", compute_inventory, "vagrant", cp_node])
-
   run_ansible(compute_inventory,"install_certs.yml")
-  ##run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node)
 
   certs=[
           "vpc.ind-west-1.staging.jiocloudservices.com",
@@ -81,21 +77,23 @@ if __name__ == "__main__":
     run_ansible(compute_inventory, "install_certs.yml", extra_vars="cert_name=%s jiocloud_cert=certs/%s.crt"%(cert, cert))
 
   run_ansible(compute_inventory,"cp.yml")
-  ##run_ansible(inventory,"cp.yml", username=user_name, limit=cp_node)
-
   run_ansible(compute_inventory,"run_userdata.yml")
-  ##run_ansible(inventory,"run_userdata.yml", username=user_name, limit=cp_node)
-
   run_ansible(compute_inventory,"check_compute.yml")
-  ##run_ansible(inventory,"check_compute.yml", username=user_name, limit=cp_node)
-
   run_ansible(compute_inventory,"sbs.yml")
-  ##run_ansible(inventory,"sbs.yml", username=user_name, limit=cp_node)
-
   run_python("apply_changes.py", ["zmq-infile", compute_inventory, "compute_team"])
-  ##run_python("apply_changes.py", ["zmq-infile", compute_inventory, "vagrant"])
-
   run_python("apply_changes.py", ["computeinfile", compute_inventory, "compute_team"])
+
+  ##run_ansible(inventory,"bootstrap.yml", username=user_name, limit=cp_node)
+  ##run_ansible(inventory,"add_line_in_file.yml", extra_vars="\"file=/etc/hosts line=%s\""%(selected_node["host"]+" "+selected_node["name"]), username=user_name)
+  ##run_python("apply_changes.py", ["ntp-infile", compute_inventory, "vagrant", cp_node])
+  ##run_ansible(inventory,"install_certs.yml", username=user_name, limit=cp_node)
+  ##for cert in certs:
+  ##  run_ansible(compute_inventory, "install_certs.yml", extra_vars="cert_name=%s jiocloud_cert=certs/%s.crt"%(cert, cert))
+  ##run_ansible(inventory,"cp.yml", username=user_name, limit=cp_node)
+  ##run_ansible(inventory,"run_userdata.yml", username=user_name, limit=cp_node)
+  ##run_ansible(inventory,"check_compute.yml", username=user_name, limit=cp_node)
+  ##run_ansible(inventory,"sbs.yml", username=user_name, limit=cp_node)
+  ##run_python("apply_changes.py", ["zmq-infile", compute_inventory, "vagrant"])
   ##run_python("apply_changes.py", ["computeinfile", compute_inventory, "vagrant"])
 
 

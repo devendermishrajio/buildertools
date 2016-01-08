@@ -13,5 +13,7 @@ call_list = ["ansible-playbook", "-i", inventory, "template_changes.yml", "-u", 
 if limited_host:
   call_list.extend(["-l", limited_host])
 
-call(call_list)
+ret = call(call_list)
+if ret != 0:
+  raise Exception('non-zero-code', 'apply-change-failed')
 
