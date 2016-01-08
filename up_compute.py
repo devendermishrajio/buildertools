@@ -3,6 +3,7 @@
 import sys
 import yaml
 from subprocess import call
+import os
 
 def get_selected_node(cp_yaml):
   node_file = open(cp_yaml, "r")
@@ -55,9 +56,8 @@ if __name__ == "__main__":
   if len(sys.argv) >= 5:
     user_name = sys.argv[4]
 
-  compute_inventory = "compute.inventory"
-
   selected_node = get_selected_node(cp_yaml)
+  compute_inventory = selected_node["name"]+".inventory"
   generate_compute_inventory(compute_inventory, selected_node)
 
   run_ansible(compute_inventory,"bootstrap.yml")
@@ -96,4 +96,4 @@ if __name__ == "__main__":
   ##run_python("apply_changes.py", ["zmq-infile", compute_inventory, "vagrant"])
   ##run_python("apply_changes.py", ["computeinfile", compute_inventory, "vagrant"])
 
-
+  os.unlink(compute_inventory)
