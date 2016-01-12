@@ -1,4 +1,4 @@
-- hosts: csdb2
+- hosts: csdb2*
   sudo: yes
   tasks:
   - include: tasks/basic_db.yml
