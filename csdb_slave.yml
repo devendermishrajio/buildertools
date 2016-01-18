@@ -1,4 +1,4 @@
-- hosts: csdb2*
+- hosts: slave-db
   sudo: yes
   tasks:
   - include: tasks/basic_db.yml
@@ -10,7 +10,7 @@
   - name: Get master_log_pos
     shell: mysql -u"{{ db_admin_user }}" -p"{{ db_admin_password }}" -h "{{ master_host }}" -e "show master status;"|sed "s/|/ /"|awk 'END{print}'|awk '{print $2}'
     register: master_log_pos
-  
+
   - name: Get master_log_file
     shell: mysql -u"{{ db_admin_user }}" -p"{{ db_admin_password }}" -h "{{ master_host }}" -e "show master status;"|sed "s/|/ /"|awk 'END{print}'|awk '{print $1}'
     register: master_log_file

@@ -1,4 +1,4 @@
-- hosts: csdb1
+- hosts: db-master
   sudo: yes
   tasks:
   - include: tasks/basic_db.yml
@@ -9,6 +9,8 @@
     lineinfile: dest=/etc/mysql/my.cnf regexp="^bind-address" line="bind-address=0.0.0.0"
   - name: Modify configuration file to setup server ID
     lineinfile: dest=/etc/mysql/my.cnf regexp="^#server-id" line="server-id=1"
+  - name: Modify configuration file to setup log_bin
+    lineinfile: dest=/etc/mysql/my.cnf regexp="^#log_bin" line="log_bin = /var/log/mysql/mysql-bin.log"
   - name: Restart mysql service
     service: name=mysql state=restarted
 
